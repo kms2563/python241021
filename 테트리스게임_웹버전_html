@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>테트리스 게임</title>
+    <style>
+        #game-board {
+            width: 300px;
+            height: 600px;
+            border: 2px solid black;
+            position: relative;
+        }
+
+        .tetromino {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            box-sizing: border-box;
+            border: 1px solid black;
+        }
+
+        #score {
+            margin-top: 20px;
+            font-size: 24px;
+        }
+
+        #start-button {
+            margin-top: 20px;
+            font-size: 18px;
+            padding: 10px 20px;
+        }
+    </style>
+</head>
+<body>
+    <div id="game-board"></div>
+    <div id="score">점수: <span id="score-value">0</span></div>
+    <button id="start-button">게임 시작</button>
+
+    <script>
+        const gameBoard = document.getElementById('game-board');
+        const scoreDisplay = document.getElementById('score-value');
+        const startButton = document.getElementById('start-button');
+
+        const ROWS = 20;
+        const COLS = 10;
+        let score = 0;
+        let gameInterval;
+        let currentTetromino;
+
+        const tetrominoes = [
+            [[1, 1, 1, 1]],  // I
+            [[1, 1], [1, 1]],  // O
+            [[1, 1, 1], [0, 1, 0]],  // T
+            [[1, 1, 1], [1, 0, 0]],  // L
+            [[1, 1, 1], [0, 0, 1]],  // J
+            [[1, 1, 0], [0, 1, 1]],  // S
+            [[0, 1, 1], [1, 1, 0]]   // Z
+        ];
+
+        function createBoard() {
+            for (let row = 0; row < ROWS; row++) {
+                for (let col = 0; col < COLS; col++) {
+                    const cell = document.createElement('div');
+                    cell.classList.add('tetromino');
+                    cell.style.top = `${row * 30}px`;
+                    cell.style.left = `${col * 30}px`;
+                    gameBoard.appendChild(cell);
+                }
+            }
+        }
+
+        function getRandomTetromino() {
+            const index = Math.floor(Math.random() * tetrominoes.length);
+            return tetrominoes[index];
+        }
+
+        function drawTetromino() {
+            currentTetromino.forEach((row, y) => {
+                row.forEach((value, x) => {
+                    if (value) {
+                        const cell = document.createElement('div');
+                        cell.classList.add('tetromino');
+                        cell.style.backgroundColor = 'blue';
+                        cell.style.top = `${(currentTetromino.y + y) * 30}px`;
+                        cell.style.left = `${(currentTetromino.x + x) * 30}px`;
+                        gameBoard.appendChild(cell);
+                    }
+                });
+            });
+        }
+
+        function moveTetromino(dx, dy) {
+            currentTetromino.x += dx;
+            currentTetromino.y += dy;
+            drawTetromino();
+        }
+
+        function startGame() {
+            createBoard();
+            score = 0;
+            scoreDisplay.textContent = score;
+            currentTetromino = {
+                shape: getRandomTetromino(),
+                x: Math.floor(COLS / 2) - 1,
+                y: 0
+            };
+            drawTetromino();
+            
+            gameInterval = setInterval(() => {
+                moveTetromino(0, 1);
+            }, 1000);
+        }
+
+        startButton.addEventListener('click', startGame);
+
+        document.addEventListener('keydown', (e) => {
+            switch (e.key) {
+                case 'ArrowLeft':
+                    moveTetromino(-1, 0);
+                    break;
+                case 'ArrowRight':
+                    moveTetromino(1, 0);
+                    break;
+                case 'ArrowDown':
+                    moveTetromino(0, 1);
+                    break;
+            }
+        });
+    </script>
+</body>
+</html>
