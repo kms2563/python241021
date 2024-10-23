@@ -24,6 +24,4 @@ account1.withdraw(3000)
 
 
 # 클래스 외부 => 인스턴스
-
 print(account1)
-
