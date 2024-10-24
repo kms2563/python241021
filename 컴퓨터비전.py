@@ -10,7 +10,7 @@ import requests
 
 # OpenAI API 키 설정
 # 본인의 키로 변경하기
-openai.api_key = '본인의 키로 변경하기'
+openai.api_key = ''
 class ImageDescriptionApp(QWidget):
     def __init__(self):
         super().__init__()
@@ -69,7 +69,7 @@ class ImageDescriptionApp(QWidget):
             "content": [
                 {
                 "type": "text",
-                "text": "이 이미지에 무엇이 있는지 한글로 설명해줘?"
+                "text": "이 이미지를 보고 마인드맵 해봐"
                 },
                 {
                 "type": "image_url",
@@ -80,7 +80,7 @@ class ImageDescriptionApp(QWidget):
             ]
             }
         ],
-        "max_tokens": 300
+        "max_tokens": 3000
         }
 
         response = requests.post("https://api.openai.com/v1/chat/completions", headers=headers, json=payload)
