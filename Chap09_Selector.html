@@ -1,23 +1,38 @@
-﻿<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <title></title>
-    <style>
-        /* class 속성으로 select를 가지는 태그의 color속성을  red로 지정한다 */
-        .select select {
-            color: rgba(28, 25, 187, 0.897);
-        } 
-    </style>
-</head>
-<body>
-    <ul>
-        
-        <li class="select">Lorem ipsum</li>
-        <li>Lorem ipsum</li>
-        <li class="select">Lirem ipsum</li>
-        <li>Lorem ipsum</li>
+﻿import requests
+from bs4 import BeautifulSoup
+from openpyxl import Workbook
 
-    </ul>
-</body>
-</html>
+# Define the URL and search query for "gray desperado type R"
+url = "https://search.naver.com/search.naver?where=nexearch&sm=top_hty&fbm=0&ie=utf8&query=Arinc"
+
+# Send a GET request to the page
+headers = {
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
+}
+response = requests.get(url, headers=headers)
+
+# Check if the request was successful
+if response.status_code == 200:
+    soup = BeautifulSoup(response.text, 'html.parser')
+
+    # Find the relevant news article titles in the soup object
+    news_titles = soup.find_all('a', class_='news_tit')
+
+    # Create a workbook and active sheet using openpyxl
+    workbook = Workbook()
+    sheet = workbook.active
+    sheet.title = "News Titles"
+
+    # Write headers to the Excel file
+    sheet.append(["Index", "News Title"])
+
+    # Write the crawled data to the Excel sheet
+    for idx, title in enumerate(news_titles):
+        sheet.append([idx + 1, title.get_text()])
+
+    # Save the workbook as 'results.xlsx'
+    workbook.save("results.xlsx")
+
+    print("Crawled data saved to results.xlsx successfully.")
+else:
+    print(f"Failed to retrieve content. Status code: {response.status_code}")
