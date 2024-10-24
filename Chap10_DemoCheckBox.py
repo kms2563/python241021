@@ -27,6 +27,17 @@ class DemoWindow(QMainWindow):
         self.checkBox3.resize(150, 30)
         self.checkBox3.stateChanged.connect(self.checkBoxState)
 
+        self.checkBox4 = QCheckBox("화웨이", self)
+        self.checkBox4.move(10, 110)
+        self.checkBox4.resize(150, 30)
+        self.checkBox4.stateChanged.connect(self.checkBoxState)
+
+        self.checkBox5 = QCheckBox("ZTE", self)
+        self.checkBox5.move(10, 140)
+        self.checkBox5.resize(150, 30)
+        self.checkBox5.stateChanged.connect(self.checkBoxState)
+
+
         self.statusBar = QStatusBar(self)
         self.setStatusBar(self.statusBar)
 
@@ -38,6 +49,10 @@ class DemoWindow(QMainWindow):
             msg += "안드로이드폰 "
         if self.checkBox3.isChecked() == True:
             msg += "윈도우폰 "
+        if self.checkBox4.isChecked() == True:
+            msg += "화웨이 "
+        if self.checkBox5.isChecked() == True:
+            msg += "ZTE "   
         self.statusBar.showMessage(msg)
 
 if __name__ == "__main__":
